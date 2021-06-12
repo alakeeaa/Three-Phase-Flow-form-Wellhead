@@ -31,13 +31,13 @@ from supporting_modules import run_one_trial
     # inputs:
     select : scalar, default 1. algorithm to use from the list below:
     
-    Algorithm I : feed-forward -> feed-forward -> feed-forward
-    Algorithm II : feed-forward -> recurrent -> feed-forward
-    Algorithm III : recurrent -> feed-forward -> feed-forward
-    Algorithm IV : feed-forward -> feed-forward
-    Algorithm VI : recurrent --> recurrent
-    Algorithm V : recurrent -> feed-forward
-    Algorithm V : one-dimensional causal convolution -> feed-forward
+    1 - Algorithm I : feed-forward -> feed-forward -> feed-forward
+    2 - lgorithm II : feed-forward -> recurrent -> feed-forward
+    3 - Algorithm III : recurrent -> feed-forward -> feed-forward
+    4 - Algorithm IV : feed-forward -> feed-forward
+    5 - Algorithm VI : recurrent --> recurrent
+    6 - Algorithm V : recurrent -> feed-forward
+    7 - Algorithm V : one-dimensional causal convolution -> feed-forward
 
 
 
@@ -65,26 +65,26 @@ results_directory = 'Experiment1'
 file_name = 'trial'
 
 
-select = 4    # algorithm from list (max is 6)
+select = 6   # algorithm from list (max is 6)
 
-stops = 2      # stops to evaluate performance
+stops = 3      # stops to evaluate performance
 
 epochs =10       # trainining epochs before stoping to evaluate
 
 days = 600     # size of training in timesteps
 
-neurons1 = 30    # size of hidden layer 1
+neurons1 = 10    # size of hidden layer 1
 
-neurons2 = 1    # size of hidden layer 2, or size of kernel when using 'Algorithm VII'
+neurons2 = 12    # size of hidden layer 2, or size of kernel when using 'Algorithm VII'
 
 memory_cell = 'LSTM' # memory cell if there is a recurrent
                     # layer in the algorithm, options : # choose from [RNN, LSTM, GRU]
 
-activation1 = 'elu'    # activation of hidden layer 1  
+activation1 = 'relu'    # activation of hidden layer 1  
                         #options: ['relu', 'tanh', 'sigmoid', 'elu', 'linear']
 activation2 = 'elu'   # activation of hidden layer 2
 
-batch_size  =8  # batch size during training
+batch_size  = 2  # batch size during training
 
 learning_rate = 0.05
 
@@ -109,9 +109,10 @@ run_one_trial(xinp,
                   days,
                   neurons1,
                   neurons2,
+                  memory_cell,
+
                   activation1,
                   activation2,
-                  memory_cell,
                   batch_size,
                   learning_rate,
                   test_span,

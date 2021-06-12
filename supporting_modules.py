@@ -50,13 +50,7 @@ rcParams['font.sans-serif'] = ["Times New Roman"]
 
 class DataProcess:
     
-    # input variables used in the experiment
-    
-    xinp= ['minutes','ChkSize' , 'WhP', 'WhT']
-    
-    # output variables used in the experiment
-    
-    yout =   ['QGas1av', 'QoStk1av','Qw1av']
+
     
     """ mapping experiment 
     
@@ -77,7 +71,7 @@ class DataProcess:
     """
     
     
-    def __init__(self,  days = 365):
+    def __init__(self,xinp, yout,  days = 365):
         
         
         # days during training
@@ -86,11 +80,11 @@ class DataProcess:
         
         # input variables
         
-        self.input_variables = DataProcess.xinp
+        self.input_variables =xinp
         
         # output variables
 
-        self.output_variables = DataProcess.yout
+        self.output_variables = yout
         
         # input variables size
 
@@ -375,10 +369,19 @@ class Models:
 
 class Trial(DataProcess, Models):
     
-    def __init__(self, days = 365, n_h_1 = 4,\
+    def __init__(self,xinp, yout, days = 365, n_h_1 = 4,\
                   n_h_2 = 4, activation1 = 'elu',activation2 = 'elu',cell_type = 'RNN', batch_size = 32,\
                      lr = 0.01, end_test = 30, results_directory = 'Experiment1',\
                          file_name = 'trial', Algorithms = 'Algorihtm I'):
+        
+        # # input variables used in the experiment
+    
+        # xinp= ['minutes','ChkSize' , 'WhP', 'WhT']
+    
+        # # output variables used in the experiment
+    
+        # yout =   ['QGas1av', 'QoStk1av','Qw1av']
+        
         
         try:
             os.makedirs(results_directory)
@@ -403,7 +406,7 @@ class Trial(DataProcess, Models):
         self.Algorithm = Algorithms
         
         
-        DataProcess.__init__(self, days)
+        DataProcess.__init__(self, xinp, yout,days)
         
         
         if self.Algorithm =='Algorithm VI' \
@@ -611,7 +614,8 @@ def run_one_trial(xinp,
          
 
     params = {
-              
+               'xinp' : xinp,
+              'yout' : yout,
               'days' : days,
               'n_h_1' : neurons1,
               'n_h_2' : neurons2,
