@@ -64,27 +64,31 @@ results_directory = 'Experiment1'
 
 file_name = 'trial'
 
-select = 7    # algorithm from list (max is 6)
+
+select = 4    # algorithm from list (max is 6)
 
 stops = 2      # stops to evaluate performance
 
-epochs = 5      # trainining epochs before stoping to evaluate
+epochs =10       # trainining epochs before stoping to evaluate
 
-days = 500     # size of training in timesteps
+days = 600     # size of training in timesteps
 
 neurons1 = 30    # size of hidden layer 1
 
 neurons2 = 1    # size of hidden layer 2, or size of kernel when using 'Algorithm VII'
 
-activation1 = 'relu'    # activation of hidden layer 1
+memory_cell = 'LSTM' # memory cell if there is a recurrent
+                    # layer in the algorithm, options : # choose from [RNN, LSTM, GRU]
 
-activation2 = 'relu'   # activation of hidden layer 2
+activation1 = 'elu'    # activation of hidden layer 1  
+                        #options: ['relu', 'tanh', 'sigmoid', 'elu', 'linear']
+activation2 = 'elu'   # activation of hidden layer 2
 
 batch_size  =8  # batch size during training
 
-learning_rate = 0.02 
+learning_rate = 0.05
 
-test_span = 100     # test data set in the future (forcast days after training)
+test_span = 1000     # test data set in the future (forcast days after training)
 
 plot_results = False    # if true it plots the results 
 
@@ -107,6 +111,7 @@ run_one_trial(xinp,
                   neurons2,
                   activation1,
                   activation2,
+                  memory_cell,
                   batch_size,
                   learning_rate,
                   test_span,
