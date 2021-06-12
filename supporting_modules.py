@@ -384,9 +384,14 @@ class Trial(DataProcess, Models):
             os.makedirs(results_directory)
         except:
             pass
-
+        # save 
         try:
-            self.results_df = pd.read_pickle(os.path.join(results_directory,file_name+'.pkl'))
+            scores_f = os.path.join(results_directory,'scores')
+            os.makedirs(scores_f)
+        except:
+            pass
+        try:
+            self.results_df = pd.read_pickle(os.path.join(scores_f,file_name+'.pkl'))
 
         except:
     
@@ -436,9 +441,13 @@ class Trial(DataProcess, Models):
         self.ytrue = self.y_data[:len(self.yhat)]
         
         if record_predictions:
-            
             try:
-                self.prediction_df = pd.read_pickle(os.path.join(results_directory,file_name+'_predictions.pkl'))
+                predictions_f = os.path.join(results_directory,'predictions')
+                os.makedirs(predictions_f)
+            except:
+                pass
+            try:
+                self.prediction_df = pd.read_pickle(os.path.join(predictions_f,file_name+'P.pkl'))
     
             except:
         
@@ -451,17 +460,13 @@ class Trial(DataProcess, Models):
             self.prediction_df = self.prediction_df.append(new_seg, ignore_index=True)
             
             
-            try:
-                predictions_f = os.path.join(results_directory,'predictions')
-                os.makedirs(predictions_f)
-            except:
-                pass
+
             
             
             
             
-            self.prediction_df.to_excel(os.path.join(predictions_f,file_name+'_predictions.xlsx'))
-            self.prediction_df.to_pickle(os.path.join(predictions_f,file_name+'_predictions.pkl'))
+            self.prediction_df.to_excel(os.path.join(predictions_f,file_name+'P.xlsx'))
+            self.prediction_df.to_pickle(os.path.join(predictions_f,file_name+'P.pkl'))
 
         if plot_results:
             self.show_plot()
@@ -550,7 +555,7 @@ class Trial(DataProcess, Models):
             
     def learning_behavior(self, font_s = 14):
         colors = ['r','b']
-        y_limits = [-.01,0.2]
+        y_limits = [-.01,0.1]
         x_limits = [-len(self.training_loss_hist)*.05,len(self.training_loss_hist)*1.05]
         
         plt.plot([x+1 for x in range(len(self.training_loss_hist))],self.training_loss_hist, color = colors[0], label = 'loss')
@@ -575,6 +580,7 @@ def run_one_trial(xinp,
                   days,
                   neurons1,
                   neurons2,
+                  memory_cell,
                   activation1,
                   activation2,
                   batch_size,
@@ -598,14 +604,7 @@ def run_one_trial(xinp,
     
     
     
-    # change cell type 
-    cell_types = [None,   # no recurrent 
-                  'RNN',  # choose from [RNN, LSTM, GRU]
-                  'GRU',  # choose from [RNN, LSTM, GRU]
-                  None,   # no recurrent 
-                  'LSTM', # choose from [RNN, LSTM, GRU]
-                  'LSTM', # choose from [RNN, LSTM, GRU]
-                  None]   # no recurrent
+
 
     # paramers of the run          
     startTime = datetime.datetime.now()
@@ -618,7 +617,7 @@ def run_one_trial(xinp,
               'n_h_2' : neurons2,
               'activation1' : activation1,
               'activation2' : activation2,
-              'cell_type' : cell_types[select-1],
+              'cell_type' : memory_cell,
               'batch_size' : batch_size,
               'lr':learning_rate,
               'end_test':test_span,
@@ -684,7 +683,7 @@ def run_one_trial(xinp,
         os.makedirs(plots_f)
     except:
         pass
-    plt.savefig(os.path.join(plots_f,file_name+'_%s.pdf'%str(len(try_combination.results_df)+1)))
+    plt.savefig(os.path.join(plots_f,file_name+'%s.pdf'%str(len(try_combination.results_df)+1)))
     plt.show()
     
     
@@ -700,9 +699,9 @@ def run_one_trial(xinp,
         os.makedirs(scores_f)
     except:
         pass
-    try_combination.results_df.to_pickle(os.path.join(scores_f,file_name+'_scores.pkl'))
-    try_combination.results_df.to_csv(os.path.join(scores_f,file_name+'_scores.csv'))
-    try_combination.results_df.to_excel(os.path.join(scores_f,file_name+'_scores.xlsx'))
+    try_combination.results_df.to_pickle(os.path.join(scores_f,file_name+'.pkl'))
+    try_combination.results_df.to_csv(os.path.join(scores_f,file_name+'.csv'))
+    try_combination.results_df.to_excel(os.path.join(scores_f,file_name+'.xlsx'))
     
     
     print('R2 on training data = ', np.nanmean(scores[0]))
